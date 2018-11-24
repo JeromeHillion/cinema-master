@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -16,42 +17,32 @@ public class Recherche extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
+        ArrayList<Film> filmsRecherche = new ArrayList<>();
         HttpSession session = request.getSession();
+        String titre = request.getParameter("titre");
 
-        String search = request.getParameter("search");
+        FilmsDonnees filmsDonnees = new FilmsDonnees();
+
+        //Pour les besoins de la vue
+        request.setAttribute("films" , filmsRecherche);
+
+        for (Film film : filmsDonnees.lesFilms){
+            String filmTitre = film.titre;
+
+            if (filmTitre.toLowerCase().contains(titre.toLowerCase())){
+                filmsRecherche.add(film);
+            }
+        }
+
+        //Délégation de la vue
+        String jspview ="recherche.jsp";
+        getServletConfig().getServletContext().getRequestDispatcher("/WEB-INF/jsp/" + jspview).forward(request,response);
 
 
-
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Détail film</title>");
-        out.println("<link href=\"//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css\" rel=\"stylesheet\" id=\"bootstrap-css\">");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<h1>Le film</h1>");
-        out.println("<ul>");
-
-
-FilmsDonnees fd = new FilmsDonnees();
-for (Film film : fd.lesFilms){
-    int filmID = film.id;
-    String filmTitre = film.titre;
-
-    if (filmTitre.toLowerCase().contains(search.toLowerCase())){
-        out.println("<li>");
-        out.println("<a href='detailfilm?id=" + filmID + "'>" + film.titre + " (" + film.note + ")</a>");
-        out.println("</li>");
     }
-}
-
-    out.println("</ul>");
-    out.println("</body>");
-    out.println("</html>");
-    }
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
 

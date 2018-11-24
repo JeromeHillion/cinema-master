@@ -31,6 +31,7 @@ public class FilmsDonnees{
         ) {
             if (f.id == id) {
                 film = f;
+                break;
             }
         }
         return film;
@@ -39,40 +40,6 @@ public class FilmsDonnees{
 
     }
 
-public String getByTitre(String titre) {
-    Film film = null;
-    for (Film f : lesFilms) {
-        if (f.titre.equals(titre)) {
-            film = f;
-        }
-    }
-    return titre;
-}
-public String getByAfficheNom(String afficheNom){
-      Film film = null;
-      for (Film f :lesFilms){
-          if (f.afficheNom == afficheNom){
-              film = f;
-          }
-      }
-    return afficheNom;
-}public Film getByNote(double note){
-      Film film = null;
-      for (Film f :lesFilms){
-          if (f.note == note){
-              film = f;
-          }
-      }
-    return film;
-}
 
-    @Override
-    public String toString() {
-        String s = "";
-        for (int i = 0; i < lesFilms.size(); i++) {
-            s+="<li>"+lesFilms.get(i).id+" "+ lesFilms.get(i).titre+"<br/>"+lesFilms.get(i).afficheNom+"<br/>"+lesFilms.get(i).note+"<br/>"+"<br/>"+"</li>";
-        }
-        return s;
-    }
 }
 

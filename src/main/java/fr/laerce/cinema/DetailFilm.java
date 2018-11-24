@@ -1,15 +1,18 @@
 package fr.laerce.cinema;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.swing.text.html.CSS.getAttribute;
 
 public class DetailFilm extends HttpServlet {
-    public DetailFilm() {
-    }
+   private List<Film> filmsConsultesSession;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -17,25 +20,28 @@ public class DetailFilm extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        HttpSession session = request.getSession(true);
+
+        filmsConsultesSession = (List<Film>) session.getAttribute("listeFilmsConsultes");
+
+        if (filmsConsultesSession == null) {
+            filmsConsultesSession = new ArrayList<Film>();
+            session.setAttribute("listeFilmsConsultes", filmsConsultesSession);
+        }
 
         Integer id = Integer.parseInt(request.getParameter("id"));
-        FilmsDonnees filmsDonnees = new FilmsDonnees();
-        Film film = filmsDonnees.getById(id);
-        PrintWriter printWriter = response.getWriter();
-        printWriter.println("<!DOCTYPE html>");
-        printWriter.println("<html>");
-        printWriter.println("<head>");
-        printWriter.println("<title>Détail film</title>");
-        printWriter.println("<link href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css' rel='stylesheet' id='bootstrap-css'>");
-        printWriter.println("</head>");
-        printWriter.println("<body>");
-        printWriter.println("<h1>Le film</h1>");
-        printWriter.println("<h1>Fiche du film : " + film.titre + "</h1>");
-        printWriter.println("<img src='affiche?id=" + film.id + "'>");
-        printWriter.println("<h3>Fiche du film : " + film.note + " </h3>");
-        printWriter.println("</body>");
-        printWriter.println("</html>");
+        FilmsDonnees fd = new FilmsDonnees();
+        Film film = fd.getById(id);
 
+        filmsConsultesSession.add(film);
+
+        // pour les besoins de la vue
+        request.setAttribute("film", film);
+
+        // délégation à la vue
+        String jspview = "detail.jsp";
+        getServletConfig().getServletContext()
+                .getRequestDispatcher("/WEB-INF/jsp/" + jspview).forward(request, response);
     }
 }
 

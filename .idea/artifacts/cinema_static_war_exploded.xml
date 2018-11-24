@@ -1,6 +1,13 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="cinema-static:war exploded">
     <output-path>$PROJECT_DIR$/target/cinema</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>cinema-static</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -11,6 +18,9 @@
             <element id="module-output" name="cinema-static" />
           </element>
           <element id="library" level="project" name="Maven: commons-io:commons-io:2.2" />
+          <element id="library" level="project" name="Maven: javax.servlet:servlet-api:2.5" />
+          <element id="library" level="project" name="Maven: org.apache.tomcat:tomcat-servlet-api:7.0.47" />
+          <element id="library" level="project" name="Maven: antlr:antlr:2.7.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">
